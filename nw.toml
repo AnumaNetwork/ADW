@@ -1,0 +1,115 @@
+[application]
+name = "adw"
+title = "Anuma Desktop Wallet"
+version = "package.json::version"
+organization = "ASPECTRON Inc"
+
+[description]
+short = "Desktop Node and Wallet for Anuma"
+long = """
+Anuma Desktop Wallet is a desktop wallet and a p2p network node instance. This application
+allows you to participate in the Anuma network by running a local node
+instance and offers access to a local wallet, compatible with the web
+wallet available at https://wallet.anuma.network
+"""
+
+[package]
+archive = { include = true }
+signatures = ["SHA256"]
+build = [
+    { NPM = { clean = true } }
+]
+# wasm = "root/wasm"
+resources = "resources/setup"
+output = "setup/$PLATFORM-$ARCH"
+include = [
+    { glob = [
+            "bin/*",
+            "*.js",
+            "resources/**.css",
+            "resources/images/*.*",
+            "resources/**.ttf",
+            "resources/**.woff",
+            "resources/**.svg",
+            "i18n.*",
+            "modules/*",
+            "lib/*",
+            "node_modules/*",
+            "package.json"
+        ]},
+]
+
+[[action]]
+items = [{ copy = { glob = [
+        ".templates",
+        ".defaults",
+        "CHANGELOG.md"
+    ], to = "$TARGET", hidden = true}}]
+
+[[dependency]]
+name = "anumad"
+git = { url = "https://github.com/AnumaNetwork/anumad", branch = "master" }
+run = [
+    { cmd = "go build" },
+    { cmd = "go build", cwd = "cmd/genkeypair" },
+    { cmd = "go build", cwd = "cmd/anumactl" },
+    { cmd = "go build", cwd = "cmd/anumawallet" },
+]
+copy = [
+    { regex = [
+        "anumad(.exe)?$",
+        "genkeypair(.exe)?$",
+        "anumactl(.exe)?$",
+        "anumawallet(.exe)?$",
+    ], to = "bin/$PLATFORM-$ARCH", flatten = true },
+]
+
+[[dependency]]
+name = "anuma-miner"
+platform = ["windows", "linux"]
+git = { url = "https://github.com/AnumaNetwork/anuma-miner", branch = "main" }
+run = [{ argv = ["cargo","build","--release","-p","anumacuda"] }]
+copy = [
+    { regex = [
+        "target/release/anumacuda(.so|.dll)$",
+        "target/release/anumaopencl(.so|.dll)$",
+        "target/release/anuma-miner(.exe)?$",
+    ], to = "bin/$PLATFORM-$ARCH", flatten = true },
+    # { file = "target/release/anuma-miner$EXE", to = "bin/$PLATFORM-$ARCH/gpuminer$EXE" },
+]
+
+[nwjs]
+version = "0.55.0"
+ffmpeg = false
+
+[macos-disk-image]
+window_caption_height = 60
+window_position = [400,100]
+window_size = [485,330]
+icon_size = 72
+application_icon_position = [100,158]
+system_applications_folder_position = [385,158]
+
+[windows]
+uuid = "c1072045-6d98-44d8-9aa5-e9be6c79bd01"
+group = "Anuma"
+# run_on_startup = "everyone"
+run_after_setup = true
+
+[images]
+application="logo.png"
+macos-application="Icon1024.png"
+macos-disk-image="kdx-dmg.png"
+innosetup-icon="logo.png"
+innosetup-wizard-small="kdx-55x58.bmp"
+innosetup-wizard-large="kdx-164x314.bmp"
+
+[languages]
+languages = ["english","french"]
+
+[firewall]
+application = { direction = "in+out" }
+rules = [
+    { name = "Anuma Node", program = "bin/windows-x64/anumad.exe", direction="in+out" },
+    { name = "Anuma GPU Miner", program = "bin/windows-x64/gpuminer.exe", direction="out" }
+]

@@ -1,0 +1,15 @@
+{
+    "anumad-node-only" : {
+        "description" : "Anumad Node",
+        "modules":{
+            "anumad:aw0" : {
+                "reset-peers" : false,
+                "args":{
+                    "rpclisten" : "0.0.0.0:12412",
+                    "listen": "0.0.0.0:12413",
+                    "profile": 7000
+                }
+            }
+        }
+    }
+}
