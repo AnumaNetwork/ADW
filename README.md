@@ -1,35 +1,33 @@
-# KDX
+# ADW
 
-KDX is a dedicated desktop process manager for [Kaspa node](https://github.com/kaspanet/kaspad).
-
-
-KDX offers a miniature console using which user can re-build the Kaspa stack, upgrading Kaspa to the latest version directly from GitHub. The build process is automated via a series of scripts that, if
-needed, fetch required tools (git, go, gcc) and build Kaspa on the host computer (the build includes various Kaspa utilities including `txgen`, `wallet`, `kaspactl` and others and can be executed against any specific Git branch).  KDX console can also be used to migrate Kasparov database if building a version with an updated database schema.
-
-KDX process configuration (available via a simple JSON editor) allows user to specify command-line arguments for executables, as such it is possible to configure KDX to run multiple instances of Kaspa or potentially run multiple networks simultaneously (provided Kaspa nodes do not pro-actively auto-discover each-other)
-
-Like many desktop applications, KDX can run in the tray bar, out of the way.
-
-KDX is built using [NWJS](https://nwjs.io) and is compatible Windows, Linux and Mac OS X.
+ADW is a dedicated desktop process manager for [Anuma node](https://github.com/anumanetwork/anumad).
 
 
-## Building KDX
+ADW offers a miniature console using which user can re-build the Anuma stack, upgrading Anuma to the latest version directly from GitHub. The build process is automated via a series of scripts that, if
+needed, fetch required tools (git, go, gcc) and build Anuma on the host computer (the build includes various Anuma utilities including `txgen`, `wallet`, `anumactl` and others and can be executed against any specific Git branch).  ADW console can also be used to migrate Kasparov database if building a version with an updated database schema.
+
+ADW process configuration (available via a simple JSON editor) allows user to specify command-line arguments for executables, as such it is possible to configure ADW to run multiple instances of Anuma or potentially run multiple networks simultaneously (provided Anuma nodes do not pro-actively auto-discover each-other)
+
+Like many desktop applications, ADW can run in the tray bar, out of the way.
+
+ADW is built using [NWJS](https://nwjs.io) and is compatible Windows, Linux and Mac OS X.
+
+
+## Building ADW
 
 ### Pre-requisites
 
 - [Node.js 14.0.0+](https://nodejs.org/)
 - Emanator - `npm install emanator@latest`
-- Rust (latest, used for building kaspa miner at https://github.com/aspectron/kaspa-miner)
-- Cuda linraries for kaspa miner (depends on the platform)
 
-**NOTE:** KDX build process builds and includes latest Kaspa binaries from Git master branches. 
+**NOTE:** ADW build process builds and includes latest Anuma binaries from Git master branches. 
 To build from specific branches, you can use `--branch...` flags (see below).
 
-#### Generating KDX installers
+#### Generating ADW installers
 ```
 npm install emanator@latest
-git clone git@github.com:aspectron/kdx
-cd kdx
+git clone git@github.com:anumanetwork/adw
+cd adw
 # run emanate with one or multiple flags below
 #  --portable   create a portable zipped application
 #  --innosetup  generate Windows setup executable
@@ -60,7 +58,7 @@ emanate --innosetup
 
 Emanator stores build files in the `~/emanator` folder
 
-#### Running KDX from development environment
+#### Running ADW from development environment
 
 
 In addition to Node.js, please download and install [Latest NWJS SDK https://nwjs.io](https://nwjs.io/) - make sure that `nw` executable is available in the system PATH and that you can run `nw` from command line.
@@ -89,128 +87,92 @@ export PATH = /home/<user>/bin/node/bin:/home/<user>/bin/nwjs:$PATH
 ```
 The above method allows you to deploy latest binaries and manage versions by re-targeting symlinks pointing to target folders.
 
-Once you have node and nwjs working, you can continue with KDX.
+Once you have node and nwjs working, you can continue with ADW.
 
-KDX installation:
+ADW installation:
 ```
 npm install emanator@latest
-git clone git@github.com:aspectron/kdx
-cd kdx
+git clone git@github.com:anumanetwork/adw
+cd adw
 npm install
 emanate --local-binaries
 nw .
 ```
 
-#### Building installers from specific Kaspa Git branches
+#### Building installers from specific Anuma Git branches
 
-`--branch` argument specifies common branch name for kaspa and kasparov, for example:
+`--branch` argument specifies common branch name for anuma and kasparov, for example:
 ```
 emanate --branch=v0.4.0-dev 
 ```
 The branch for each repository can be overriden using `--branch-<repo-name>=<branch-name>` arguments as follows:
 ```
-emanate --branch=v0.4.0-dev --branch-kaspad=v0.3.0-dev
+emanate --branch=v0.4.0-dev --branch-anumad=v0.3.0-dev
 emanate --branch-miningsimulator=v0.1.2-dev
 ```
 
-**NOTE:** KDX `build` command in KDX console operates in the same manner and accepts `--branch...` arguments.
+**NOTE:** ADW `build` command in ADW console operates in the same manner and accepts `--branch...` arguments.
 
 
-## KDX Process Manager
+## ADW Process Manager
 
 ### Configuration
 
-KDX runtime configuration is declared using a JSON object.  
+ADW runtime configuration is declared using a JSON object.  
 
-Each instance of the process is declared using it's **type** (for example: `kaspad`) and a unique **identifier** (`kd0`).  Most process configuration objects support `args` property that allows
-passing arguments or configuration options directly to the process executable.  Depending on the process type, the configuration is passed via command line arguments (kasparov*) or configuration file (kaspad).
+Each instance of the process is declared using it's **type** (for example: `anumad`) and a unique **identifier** (`aw0`).  Most process configuration objects support `args` property that allows
+passing arguments or configuration options directly to the process executable.  Depending on the process type, the configuration is passed via command line arguments (kasparov*) or configuration file (anumad).
 
 Supported process types:
-- `kaspad` - Kaspa full node
-- `kaspaminer` - Kaspa sha256 miner
+- `anumad` - Anuma full node
+- `anumaminer` - Anuma sha256 miner
 
-**NOTE:** For Kaspa, to specify multiple connection endpoints, you must use an array of addresses as follows: ` "args" : { "connect" : [ "peer-addr-port-a", "peer-addr-port-b", ...] }`
+**NOTE:** For Anuma, to specify multiple connection endpoints, you must use an array of addresses as follows: ` "args" : { "connect" : [ "peer-addr-port-a", "peer-addr-port-b", ...] }`
 
 #### Default Configuration File
 ```js
 {
-	"kaspad:kd0": {
+	"anumad:aw0": {
 		"args": {
-			"rpclisten": "0.0.0.0:16210",
-			"listen": "0.0.0.0:16211",
+			"rpclisten": "0.0.0.0:12412",
+			"listen": "0.0.0.0:12413",
 			"profile": 7000,
 			"rpcuser": "user",
 			"rpcpass": "pass"
 		}
 	},
-	"kaspad:kd1": {
-		"args": {
-			"rpclisten": "0.0.0.0:16310",
-			"listen": "0.0.0.0:16311",
-			"profile": 7001,
-			"connect": "0.0.0.0:16211",
-			"rpcuser": "user",
-			"rpcpass": "pass"
-		}
-	},
-	"simulator:sim0": {
-        "blockdelay" : 2000,
-		"peers": [ "127.0.0.1:16310" ]
-	},
-	"pgsql:db0": {
-		"port": 18787
-	},
-	"mqtt:mq0": {
-		"port": 18792
-	},
-	"kasparovsyncd:kvsd0": {
-		"args": {
-			"rpcserver": "localhost:16310",
-			"dbaddress": "localhost:18787"
-			"mqttaddress": "localhost:18792",
-			"mqttuser" : "user",
-			"mqttpass" : "pass"
-		}
-	},
-	"kasparovd:kvd0": {
-		"args": {
-			"listen": "localhost:11224",
-			"rpcserver": "localhost:16310",
-			"dbaddress": "localhost:18787"
-		}
-	}
-}
+
 ```
 
 ### Data Storage
 
-KDX stores it's configuration file as `~/.kdx/config.json`.  Each configured process data is stored in `<datadir>/<process-type>-<process-identifier>` where `datadir` is a user-configurable location.  The default `datadir` location is `~/.kdx/data/`.  For example, `kaspad` process with identifier `kd0` will be stored in `~/.kdx/data/kaspad-kd0/` and it's logs in `~/.kdx/data/kaspad-kd0/logs/kaspad.log`
+ADW stores it's configuration file as `~/.adw/config.json`.  Each configured process data is stored in `<datadir>/<process-type>-<process-identifier>` where `datadir` is a user-configurable location.  The default `datadir` location is `~/.adw/data/`.  For example, `anumad` process with identifier `aw0` will be stored in `~/.adw/data/anumad-aw0/` and it's logs in `~/.adw/data/anumad-aw0/logs/anumad.log`
 
-### Kaspa Binaries
+### Anuma Binaries
 
-KDX can run Kaspa from 2 locations - an integrated `bin` folder that is included with KDX redistributables and `~/.kdx/bin` folder that is created during the Kaspa build process. 
+ADW can run Anuma from 2 locations - an integrated `bin` folder that is included with ADW redistributables and `~/.adw/bin` folder that is created during the Anuma build process. 
 
-## KDX Console
+## ADW Console
 
-KDX Console provides following functionality:
+ADW Console provides following functionality:
 - Upgrading kasparov using `migrate` command
 - `start` and `stop` controls stack runtime
-- Kaspad RPC command execution
-- Use of test wallet app (KDX auto-configures kasparov address)
-- Rebuilding Kaspa software stack from within the console
+- Anumad RPC command execution
+- Use of test wallet app (ADW auto-configures kasparov address)
+- Rebuilding Anuma software stack from within the console
 
-### Using Kaspad RPC
+### Using Anumad RPC
 
-Kaspad RPC can be accessed via KDX Console using the process identifier. For example:
+Anumad RPC can be accessed via ADW Console using the process identifier. For example:
 ```
-$ kd0 help
-$ kd0 getinfo
+$ aw0 help
+$ aw0 getinfo
 ```
 Note that RPC methods are case insensitive.
 
 To supply RPC call arguments, you must supply and array of JSON-compliant values (numbers, double-quote-enclosed strings and 'true'/'false').  For example:
 ```
-$ kd0 getblock "000000b22ce2fcea335cbaf5bc5e4911b0d4d43c1421415846509fc77ec643a7"
+$ aw0 getblock "000000b22ce2fcea335cbaf5bc5e4911b0d4d43c1421415846509fc77ec643a7"
 {
   "hash": "000000b22ce2fcea335cbaf5bc5e4911b0d4d43c1421415846509fc77ec643a7",
   "confirmations": 83,
